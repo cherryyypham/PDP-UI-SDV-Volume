@@ -6,25 +6,70 @@ As a "Bad-UI" implementation, this video player contains a volume control interf
 
 Stardew Valley features a unique fishing mechanic where players must rapidly click to keep a green bar aligned with a moving fish icon within a vertical meter. The fish moves unpredictably, and the bar naturally falls due to "gravity" when not being clicked. Success requires maintaining alignment for several seconds until a progress bar fills completely.
 
-This volume picker faithfully recreates that experience: users input their desired volume, which appears as a target marker on a vertical bar. A movable bar (controlled by clicking) must be kept hovering over the marker. However, just like the fish in Stardew Valley, the bar has gravity pulling it downward when not actively clicked, and the volume marker itself moves slightly, and even jumping to a completely different position when you're close to success. Only by maintaining alignment for the full duration can users actually set their volume.
+This volume picker faithfully recreates that experience: users input their desired volume, which appears as a target marker on a vertical bar. A cursor bar (controlled by clicking) must be kept hovering over the marker. However, just like the fish in Stardew Valley, the cursor bar has gravity pulling it downward when not actively clicked, and the volume marker itself moves slightly, and even jumping to a completely different position when you're close to success. Only by maintaining alignment for the full duration can users actually set their volume.
 
 ## Project Structure
 
 ```
-
+📦 PDP-UI-SDV-Volume
+└─ src
+   └─ main
+      ├─ java
+      │  └─ stardewvolume
+      │     ├─ app
+      │     │  ├─ Controller.java
+      │     │  └─ Main.java
+      │     ├─ ui
+      │     │  ├─ Assets.java
+      │     │  └─ LayoutFactory.java
+      │     ├─ video
+      │     │  ├─ VideoControls.java
+      │     │  └─ VideoPlayer.java
+      │     └─ volume
+      │        ├─ VolumeController.java
+      │        ├─ VolumeGameView.java
+      │        ├─ VolumeInputHandler.java
+      │        └─ VolumeModel.java
+      └─ resources
+         └─ the-duck-song.mp4
 ```
 
 ## Running the Program
 
 ```bash
 # Navigate to project directory
-cd PDP-UI-SDV-Volume/src
+cd PDP-UI-SDV-Volume
 
-# Compile all files
-javac *.java
+# Option 1: Run the program with javafx:run in maven menu
 
-# Run the program
+# Option 2: Use these commands to compile and run with JavaFX (adjust module path for your system) 
+javac --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.media -d out src/stardewvolume/**/*.java
 java ui.player
+```
+
+## How to Play
+
+1. Set your desired target volume using the slider (0-100%)
+2. Click "Start Game" to begin
+3. Click repeatedly on the game canvas to push the cursor bar upward
+4. Align the cursor bar with the yellow target marker
+5. Maintain alignment until the green progress bar completely fills
+6. Survive the target's random jumps as you approach victory
+7. Upon success, your chosen volume is applied to the video player
+
+## Configuration
+The game difficulty can be adjusted by modifying constants in `VolumeModel.java`:
+
+```java
+private static final double GRAVITY = 0.0008;           // Rate cursor falls (higher = harder)
+private static final double CLICK_BOOST = 0.03;         // Upward push per click (lower = harder)
+private static final double CURSOR_SIZE = 0.1;          // Cursor bar height (smaller = harder)
+private static final double TARGET_SIZE = 0.02;         // Target marker height (smaller = harder)
+private static final double SUCCESS_RATE = 0.003;       // Progress fill speed (lower = harder)
+private static final double FAIL_RATE = 0.001;          // Progress drain speed (higher = harder)
+private static final double TARGET_MOVE_SPEED = 0.003;  // Target drift speed (higher = harder)
+private static final double TARGET_JUMP_CHANCE = 0.25;  // Jump probability per frame (higher = harder)
+private static final double FAIL_TIMEOUT = 200.0;       // Milliseconds at 0% before game over (smaller = harder)
 ```
 
 ## Reflection
@@ -35,10 +80,10 @@ Volume controls are among the most ubiquitous and standardized UI elements in di
 
 ### Design Subversion
 
-This implementation weaponizes that expectation by introducing time, unpredictability, and physical engagement where users anticipate none. The familiar volume slider becomes an adversarial mini-game that actively resists completion. The "gravity" mechanic forces continuous clicking rather than a single action, transforming a passive gesture into active work. The marker's movement introduces uncertainty where users expect stability, and its dramatic jump near completion is a deliberate bait-and-switch that exploits the user's growing confidence. By requiring 5 full seconds of sustained alignment (plus the additional 3-second challenge after the jump), the design stretches what should be a fraction-of-a-second interaction into a protracted struggle. The cruelest aspect is that the interface looks conventional—users don't realize they're entering a game until they're already playing, and by then, they're committed to winning rather than simply adjusting their volume.
+This implementation weaponizes that expectation by introducing time constraints, unpredictability, and physical engagement where users anticipate none. The familiar volume slider becomes an adversarial mini-game that actively resists completion. The design stretches what should be a fraction-of-a-second interaction into a protracted struggle.
 
 ## Credits
 
-- Inspired by the fishing mechanic from Stardew Valley by ConcernedApe
-- Created as a final lab assignment exploring subversive UI design
-- Concept based on r/badUIbattles community designs
+- Inspired by the fishing mechanic from [Stardew Valley](https://www.stardewvalley.net/) by ConcernedApe
+- Concept based on [r/badUIbattles](https://www.reddit.com/r/badUIbattles/) community designs
+- Project Tree was generated by [Project Tree Generator](https://woochanleee.github.io/project-tree-generator)
