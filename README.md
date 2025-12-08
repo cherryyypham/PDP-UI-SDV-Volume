@@ -44,7 +44,7 @@ cd PDP-UI-SDV-Volume
 
 # Option 2: Use these commands to compile and run with JavaFX (adjust module path for your system) 
 javac --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.media -d out src/stardewvolume/**/*.java
-java ui.player
+java --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls,javafx.media -cp out stardewvolume.app.Main
 ```
 
 ## How to Play
